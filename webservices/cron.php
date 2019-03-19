@@ -41,7 +41,15 @@ if (!file_exists($sConfigFile))
 	exit(EXIT_CODE_ERROR);
 }
 
-require_once(APPROOT.'/application/startup.inc.php');
+try
+{
+	require_once(APPROOT.'/application/startup.inc.php');
+}
+catch (Exception $e)
+{
+	echo $e->getMessage()."\n";
+	exit(EXIT_CODE_ERROR);
+}
 
 $oCtx = new ContextTag('CRON');
 
@@ -310,6 +318,12 @@ function CronExec($oP, $aProcesses, $bVerbose)
 			$oP->p("Sleeping");
 		}
 		sleep($iCronSleep);
+		// Maintenance mode
+		if (file_exists(APPROOT.'.maintenance'))
+		{
+			$oP->p("Maintenance mode detected");
+			return;
+		}
 	}
 	if ($bVerbose)
 	{
@@ -565,10 +579,11 @@ try
 	{
 		// Note: testing this now in case some of the background processes forces the read-only mode for a while
 		//       in that case it is better to exit with the check on reentrance (mutex)
-		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE) || file_exists(APPROOT.'.maintenance'))
 		{
-			$oP->p("A database maintenance is ongoing (read-only mode even for admins).");
+			$oP->p("A maintenance is ongoing");
 			$oP->Output();
+			$oMutex->Unlock();
 			exit(EXIT_CODE_ERROR);
 		}
 
@@ -609,4 +624,3 @@ finally
 $oP->p("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
 
 $oP->Output();
-?>
