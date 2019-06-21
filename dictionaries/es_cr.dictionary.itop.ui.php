@@ -454,7 +454,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Error: estimulo invalido "%1$s" en objeto %2$s en estado "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
-	'UI:Error:MaintenanceMode' => 'La aplicación se encuentra actualmente en mantenimiento',
+	'UI:Error:MaintenanceMode' => 'La aplicación se encuentra actualmente en mantenimiento~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Cuenta',
