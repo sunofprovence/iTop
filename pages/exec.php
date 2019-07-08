@@ -70,8 +70,11 @@ if (!file_exists($sTargetPage))
 	exit;
 }
 
+// Use 'maintenance' parameter to bypass maintenance mode
+$bBypassMaintenance = !is_null(Utils::ReadParam('maintenance', null));
+
 // Maintenance mode
-if (file_exists(APPROOT.'.maintenance'))
+if (file_exists(APPROOT.'.maintenance') && !$bBypassMaintenance)
 {
 	http_response_code(503);
 	require_once(APPROOT.'core/dict.class.inc.php');

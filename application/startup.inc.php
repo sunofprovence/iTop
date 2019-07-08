@@ -34,15 +34,45 @@ register_shutdown_function(function()
 });
 
 // Use 'maintenance' parameter to bypass maintenance mode
-$bMaintenanceAction = !is_null(Utils::ReadParam('maintenance', null));
+$bBypassMaintenance = !is_null(Utils::ReadParam('maintenance', null));
 
 // Maintenance mode
-if (file_exists(APPROOT.'.maintenance') && !$bMaintenanceAction)
+if (file_exists(APPROOT.'.maintenance') && !$bBypassMaintenance)
 {
 	require_once(APPROOT.'core/dict.class.inc.php');
 	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance');
 	$sTitle = Dict::S('UI:Error:MaintenanceTitle', 'Maintenance');
-	throw new MaintenanceException($sMessage, $sTitle);
+	//	throw new MaintenanceException($sMessage, $sTitle);
+
+	http_response_code(503);
+	if (strpos($_SERVER['REQUEST_URI'], '/webservices/rest.php') !== false)
+	{
+		// Rest calls
+		echo $sMessage;
+	}
+	elseif (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
+	{
+		// AJAX
+		if (strpos($_SERVER['REQUEST_URI'], '/pages/ajax.searchform.php') !== false)
+		{
+			// Specific ajax search error
+			echo '<html><body><div>'.$sMessage.'</div></body></html>';
+		}
+		else
+		{
+			echo $sMessage;
+		}
+	}
+	else
+	{
+		// Web Page
+		require_once(APPROOT."/setup/setuppage.class.inc.php");
+
+		$oP = new SetupPage($sTitle);
+		$oP->p("<h2>$sMessage</h2>");
+		$oP->output();
+	}
+	exit();
 }
 
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
