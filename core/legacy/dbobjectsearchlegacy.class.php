@@ -1190,7 +1190,7 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
-	public function GetCriteria() {return $this->m_oSearchCondition;}
+	public function GetCriteria() {return $this->m_oSearchCondition->getCriteria();}
 	public function GetCriteria_FullText() {throw new Exception("Removed GetCriteria_FullText");}
 	public function GetCriteria_PointingTo($sKeyAttCode = "")
 	{
@@ -1485,6 +1485,10 @@ class DBObjectSearch extends DBSearch
 			}
 			return new ListExpression($aItems);
 		}
+		elseif ($oExpression instanceof NestedQueryOqlExpression)
+		{
+			return NestedQueryExpression::FromOQLObjectQuery($oExpression->GetNestedQuery());
+        }
 		elseif ($oExpression instanceof FunctionOqlExpression)
 		{
 			$aArgs = array();
@@ -1906,7 +1910,7 @@ class DBObjectSearch extends DBSearch
 	 * @return null|SQLObjectQuery
 	 * @throws \CoreException
 	 */
-	protected function MakeSQLObjectQuery(&$oBuild, $aAttToLoad = null, $aValues = array())
+	public function MakeSQLObjectQuery(&$oBuild, $aAttToLoad = null, $aValues = array())
 	{
 		// Note: query class might be different than the class of the filter
 		// -> this occurs when we are linking our class to an external class (referenced by, or pointing to)
