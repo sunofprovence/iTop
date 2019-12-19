@@ -91,10 +91,9 @@ final class CoreUpdater
 		{
 			// Compile code
 			IssueLog::Info('itop-core-update: Start compilation');
-			IssueLog::Info('itop-core-update: Version Dev');
 
 			$sTargetEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv);
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv, false);
 			$oRuntimeEnv->CheckDirectories($sTargetEnv);
 			$oRuntimeEnv->CompileFrom('production');
 			$oConfig = $oRuntimeEnv->MakeConfigFile($sTargetEnv.' (built on '.date('Y-m-d').')');
@@ -102,7 +101,12 @@ final class CoreUpdater
 			$oRuntimeEnv->WriteConfigFileSafe($oConfig);
 			$oRuntimeEnv->InitDataModel($oConfig, true);
 
-			$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation($oConfig, $oRuntimeEnv->GetBuildDir());
+			$sModulesDirToKeep = $oRuntimeEnv->GetBuildDir();
+			$aDirsToScanForModules = array(
+				$sModulesDirToKeep,
+				APPROOT.'extensions'
+			);
+			$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation($oConfig, $aDirsToScanForModules);
 			$aSelectedModules = array();
 			foreach ($aAvailableModules as $sModuleId => $aModule)
 			{
@@ -141,6 +145,8 @@ final class CoreUpdater
 			}
 			$oRuntimeEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules,
 				$aSelectedExtensionCodes, 'Done by the iTop Core Updater');
+
+			$oRuntimeEnv->Commit();
 
 			IssueLog::Info('itop-core-update: Compilation done');
 		}
