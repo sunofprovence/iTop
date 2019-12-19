@@ -8,11 +8,11 @@
 namespace Combodo\iTop\CoreUpdate\Controller;
 
 
+use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\FilesInformation\Service\FileNotExistException;
 use Combodo\iTop\FilesInformation\Service\FilesInformation;
-use Combodo\iTop\TwigBase\Controller\Controller;
 use Dict;
 use Exception;
 use IssueLog;
@@ -22,9 +22,13 @@ use utils;
 
 class AjaxController extends Controller
 {
-    const LOCAL_DIR = __DIR__;
+    public function __construct()
+    {
+    	parent::__construct();
+    	$this->InitFromModule();
+    }
 
-    public function OperationCanUpdateCore()
+	public function OperationCanUpdateCore()
     {
         $aParams = array();
 
