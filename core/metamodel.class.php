@@ -5699,7 +5699,7 @@ abstract class MetaModel
 				// Decision: to simplify, let's consider the views as being wrong anytime
 				// Rework the view
 				//
-				$oFilter = new DBObjectSearch($sClass, '');
+				$oFilter = new DBObjectSearch($sClass);
 				$oFilter->AllowAllData();
 				$sSQL = $oFilter->MakeSelectQuery();
 				$aErrors[$sClass]['*'][] = "Redeclare view '$sView' (systematic - to support an eventual change in the friendly name computation)";
@@ -5709,7 +5709,7 @@ abstract class MetaModel
 			{
 				// Create the view
 				//
-				$oFilter = new DBObjectSearch($sClass, '');
+				$oFilter = new DBObjectSearch($sClass);
 				$oFilter->AllowAllData();
 				$sSQL = $oFilter->MakeSelectQuery();
 				$aErrors[$sClass]['*'][] = "Missing view for class: $sClass";
