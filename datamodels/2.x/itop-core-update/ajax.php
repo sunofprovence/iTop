@@ -24,7 +24,7 @@ MetaModel::LoadConfig(utils::GetConfig());
 
 new ContextTag('Setup');
 
-$oUpdateController = new AjaxController();
+$oUpdateController = new AjaxController(MODULESROOT.'itop-core-update/view', 'itop-core-update');
 $oUpdateController->DisableInDemoMode();
 $oUpdateController->AllowOnlyAdmin();
 

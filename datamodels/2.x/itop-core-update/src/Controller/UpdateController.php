@@ -16,19 +16,13 @@ use utils;
 
 class UpdateController extends Controller
 {
-	public function __construct()
-	{
-		parent::__construct();
-		$this->InitFromModule();
-	}
-
     public function OperationSelectUpdateFile()
 	{
 		$sTransactionId = utils::GetNewTransactionId();
 		$aParams = array();
 		$aParams['sTransactionId'] = $sTransactionId;
         $aParams['aPreviousInstall'] = $this->GetPreviousInstallations();
-        $aParams['sAjaxURL'] = utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php', array('maintenance' => 'true'));
+        $aParams['sAjaxURL'] = utils::GetAbsoluteUrlModulesRoot().'itop-core-update/ajax.php?maintenance=true';
         $aParams['iDiskFreeSpace'] = disk_free_space(APPROOT);
         $aParams['sDiskFreeSpace'] = utils::BytesToFriendlyFormat($aParams['iDiskFreeSpace']);
 		$aParams['iFileUploadMaxSize'] = $this->GetFileUploadMaxSize();
@@ -139,7 +133,7 @@ class UpdateController extends Controller
             'sNewVersion' => $sNewVersion,
             'sProgressImage' => utils::GetAbsoluteUrlAppRoot().'setup/orange-progress.gif',
             'sSetupToken' => SetupUtils::CreateSetupToken(),
-            'sAjaxURL' => utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php', array('maintenance' => 'true')),
+            'sAjaxURL' => utils::GetAbsoluteUrlModulesRoot().'itop-core-update/ajax.php?maintenance=true',
         );
         $this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'setup/jquery.progression.js');
 

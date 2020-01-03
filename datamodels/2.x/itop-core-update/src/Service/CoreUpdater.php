@@ -84,28 +84,6 @@ final class CoreUpdater
 	/**
 	 * @throws \Exception
 	 */
-	public static function CheckCompile()
-	{
-		try
-		{
-			// Compile code in env-production-build
-			IssueLog::Info('itop-core-update: Check compilation');
-
-			$sTargetEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv, false);
-			$oRuntimeEnv->CheckDirectories($sTargetEnv);
-			$oRuntimeEnv->CompileFrom('production');
-			SetupUtils::tidydir(APPROOT."env-{$sTargetEnv}-build");
-		} catch (Exception $e)
-		{
-			IssueLog::error($e->getMessage());
-			throw $e;
-		}
-	}
-
-	/**
-	 * @throws \Exception
-	 */
 	public static function Compile()
 	{
 		try
@@ -114,31 +92,9 @@ final class CoreUpdater
 			IssueLog::Info('itop-core-update: Start compilation');
 
 			$sTargetEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv);
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv, false);
 			$oRuntimeEnv->CheckDirectories($sTargetEnv);
 			$oRuntimeEnv->CompileFrom('production');
-
-			IssueLog::Info('itop-core-update: Compilation done');
-		} catch (Exception $e)
-		{
-			IssueLog::error($e->getMessage());
-			throw $e;
-		}
-	}
-
-	/**
-	 * @throws \Exception
-	 */
-	public static function UpdateDatabase()
-	{
-		try
-		{
-			// Compile code
-			IssueLog::Info('itop-core-update: Update database');
-
-			$sTargetEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv);
-			$oRuntimeEnv->CheckDirectories($sTargetEnv);
 			$oConfig = $oRuntimeEnv->MakeConfigFile($sTargetEnv.' (built on '.date('Y-m-d').')');
 			$oConfig->Set('access_mode', ACCESS_FULL);
 			$oRuntimeEnv->WriteConfigFileSafe($oConfig);
@@ -191,8 +147,9 @@ final class CoreUpdater
 
 			$oRuntimeEnv->Commit();
 
-			IssueLog::Info('itop-core-update: Update database done');
-		} catch (Exception $e)
+			IssueLog::Info('itop-core-update: Compilation done');
+		}
+		catch (Exception $e)
 		{
 			IssueLog::error($e->getMessage());
 			throw $e;
