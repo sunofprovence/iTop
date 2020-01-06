@@ -96,7 +96,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		{
 			$sEnvironmentLabel = $this->sTargetEnv;
 		}
-		$oConfig->Set('app_env_label', $sEnvironmentLabel);
+		$oConfig->Set('app_env_label', $sEnvironmentLabel, 'application updater');
 
 		return $oConfig;
 	}

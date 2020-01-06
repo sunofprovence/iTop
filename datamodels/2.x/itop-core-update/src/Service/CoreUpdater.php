@@ -89,13 +89,13 @@ final class CoreUpdater
 		try
 		{
 			// Compile code
-			SetupLog::Info('itop-core-update: Start compilation1');
+			SetupLog::Info('itop-core-update: Start compilation');
 
-			$sTargetEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv, false);
-			$oRuntimeEnv->CheckDirectories($sTargetEnv);
+			$sFinalEnv = 'production';
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, false);
+			$oRuntimeEnv->CheckDirectories($sFinalEnv);
 			$oRuntimeEnv->CompileFrom('production');
-			$oConfig = $oRuntimeEnv->MakeConfigFile($sTargetEnv.' (built on '.date('Y-m-d').')');
+			$oConfig = $oRuntimeEnv->MakeConfigFile($sFinalEnv.' (built on '.date('Y-m-d').')');
 			$oConfig->Set('access_mode', ACCESS_FULL);
 			$oRuntimeEnv->WriteConfigFileSafe($oConfig);
 			$oRuntimeEnv->InitDataModel($oConfig, true);

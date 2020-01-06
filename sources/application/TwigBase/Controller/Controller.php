@@ -155,6 +155,36 @@ abstract class Controller
 	}
 
 	/**
+	 * Entry point to handle requests
+	 *
+	 * @api
+	 */
+	public function HandleAjaxOperation()
+	{
+		try
+		{
+			$this->CheckAccess();
+			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
+
+			$sMethodName = 'Operation'.$this->m_sOperation;
+			if (method_exists($this, $sMethodName))
+			{
+				$this->$sMethodName();
+			}
+			else
+			{
+				$this->DisplayPageNotFound();
+			}
+		}
+		catch (Exception $e)
+		{
+			http_response_code(500);
+			$aResponse = array('sError' => $e->getMessage());
+			echo json_encode($aResponse);
+		}
+	}
+
+	/**
 	 * Overridable "page not found" which is more an "operation not found"
 	 */
 	public function DisplayPageNotFound()
@@ -535,4 +565,8 @@ abstract class Controller
 	{
 		$this->m_oPage->output();
 	}
+}
+
+class PageNotFoundException extends Exception
+{
 }

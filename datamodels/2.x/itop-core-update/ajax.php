@@ -20,6 +20,7 @@ require_once(MODULESROOT.'itop-core-update/src/Service/RunTimeEnvironmentCoreUpd
 require_once(MODULESROOT.'itop-core-update/src/Service/CoreUpdater.php');
 require_once(MODULESROOT.'itop-core-update/src/Controller/AjaxController.php');
 
+
 MetaModel::LoadConfig(utils::GetConfig());
 
 new ContextTag('Setup');
@@ -30,4 +31,4 @@ $oUpdateController->AllowOnlyAdmin();
 
 // Allow parallel execution of ajax requests
 session_write_close();
-$oUpdateController->HandleOperation();
+$oUpdateController->HandleAjaxOperation();
