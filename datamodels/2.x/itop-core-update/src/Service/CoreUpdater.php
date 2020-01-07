@@ -69,7 +69,17 @@ final class CoreUpdater
 			SetupLog::Info('itop-core-update: Update done, check files integrity');
 			FilesIntegrity::CheckInstallationIntegrity(APPROOT);
 			SetupLog::Info('itop-core-update: Files integrity OK');
-
+			// Reset the opcache since otherwise the "core" files may still be cached !!
+			if (function_exists('opcache_reset'))
+			{
+				// Zend opcode cache
+				opcache_reset();
+			}
+			if (function_exists('apc_clear_cache'))
+			{
+				// APC(u) cache
+				apc_clear_cache();
+			}
 		} catch (Exception $e)
 		{
 			SetupLog::error($e->getMessage());
