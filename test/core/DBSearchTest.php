@@ -54,6 +54,9 @@ class DBSearchTest extends ItopDataTestCase
 	protected function setUp()
 	{
 		parent::setUp();
+
+		require_once(APPROOT.'application/itopwebpage.class.inc.php');
+		require_once(APPROOT.'application/displayblock.class.inc.php');
 	}
 
 	/**
@@ -517,7 +520,7 @@ class DBSearchTest extends ItopDataTestCase
 
 		self::assertEquals(1, count($aRes));
 	}
-	
+
 	/**
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
