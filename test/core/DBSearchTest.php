@@ -518,4 +518,34 @@ class DBSearchTest extends ItopDataTestCase
 		self::assertEquals(1, count($aRes));
 	}
 
+	/**
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function testSelectInWithVariableExpressions()
+	{
+		$aReq = array(array(1, 0, 0), array(1, 1, 3), array(1, 2, 1), array(1, 0, 1), array(1, 1, 0), array(1, 2, 1));
+		$sOrgs = $this->init_db(3, 4, $aReq);
+		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN ($sOrgs)");
+		self::assertNotNull($oSearch);
+		$oSet = new \DBObjectSet($oSearch);
+		static::assertEquals(6, $oSet->Count());
+
+		$allOrgIds = explode(",", $sOrgs);
+		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN (:org_ids)", array('org_ids'=> $allOrgIds));
+		self::assertNotNull($oSearch);
+		$oSet = new \DBObjectSet($oSearch);
+		static::assertEquals(6, $oSet->Count());
+
+		$TwoOrgIdsOnly = array($allOrgIds[0], $allOrgIds[1]);
+		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN (:org_ids)", array('org_ids'=> $TwoOrgIdsOnly));
+		self::assertNotNull($oSearch);
+		$oSet = new \DBObjectSet($oSearch);
+		static::assertEquals(4, $oSet->Count());
+	}
+
+
 }
